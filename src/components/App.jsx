@@ -9,7 +9,12 @@ class App extends React.Component {
       videoInPlayer: exampleVideoData[0],
       videoList: exampleVideoData.slice(1)
     };
-  } 
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    console.log(event.target.getAttribute('data'));
+  }
 
   render() {
     return (<div>
@@ -23,7 +28,7 @@ class App extends React.Component {
           <VideoPlayer video={this.state.videoInPlayer}/>
         </div>
         <div className="col-md-5">
-          <VideoList videos={this.state.videoList}/>
+          <VideoList onClick={this.handleClick} videos={this.state.videoList}/>
         </div>
       </div>
     </div>
