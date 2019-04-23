@@ -12,8 +12,11 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(event) {
-    console.log(event.target.getAttribute('data'));
+  handleClick(clickedVideo) {
+    this.setState({
+      videoInPlayer : clickedVideo,
+      videoList : exampleVideoData.filter(video => video.id.videoId !== clickedVideo.id.videoId)
+    });
   }
 
   render() {
