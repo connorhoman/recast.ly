@@ -1,47 +1,70 @@
 import exampleVideoData from '/src/data/exampleVideoData.js';
 import VideoList from './VideoList.js';
 import VideoPlayer from './VideoPlayer.js';
-import searchYouTube from '../lib/searchYouTube.js';
 import YOUTUBE_API_KEY from '../config/youtube.js';
+import Search from './Search.js';
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       videoInPlayer: exampleVideoData[0],
-      videoList: exampleVideoData.slice(1)
+      videoList: exampleVideoData
     };
     this.handleClick = this.handleClick.bind(this);
+    this.searchClick = this.searchClick.bind(this);
   }
 
   handleClick(clickedVideo) {
     this.setState({
       videoInPlayer : clickedVideo,
-      videoList : this.state.videoList.filter(video => video.id.videoId !== clickedVideo.id.videoId)
     });
   }
 
+  searchClick() {
+    let text = document.getElementsByClassName('form-control')[0].value;
+  
+    let init = {
+      key: YOUTUBE_API_KEY,
+      max: 5,
+      query: text 
+    }
+    let cb = data => {
+      this.setState({
+        videoInPlayer: data[0],
+        videoList: data
+      });
+    }
+    console.log(this);
+    this.props.searchYouTube(init,cb);
+    document.getElementsByClassName('form-control')[0].value = '';
+  }
+
+  // getData() {
+
+  // }
   componentDidMount() {
     let init = {
       key: YOUTUBE_API_KEY,
       max: 5,
-      q: 'Warcraft 3 Remastered'
+      query: 'inception'
     };
 
-    let cb = (function(data) {
+    let cb = data => {
       this.setState({
         videoInPlayer: data[0],
-        videoList: data.slice(1)
+        videoList: data
       });
-    }.bind(this);
-    searchYouTube(init, cb);
+    }
+    this.props.searchYouTube(init, cb);
   }
 
   render() {
     return (<div>
       <nav className="navbar">
         <div className="col-md-6 offset-md-3">
-          <div><h5><em>search</em> view goes here</h5></div>
+          <Search search={this.searchClick}/>
         </div>
       </nav>
       <div className="row">
