@@ -1,6 +1,8 @@
 import exampleVideoData from '/src/data/exampleVideoData.js';
 import VideoList from './VideoList.js';
 import VideoPlayer from './VideoPlayer.js';
+import searchYouTube from '../lib/searchYouTube.js';
+import YOUTUBE_API_KEY from '../config/youtube.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,8 +17,24 @@ class App extends React.Component {
   handleClick(clickedVideo) {
     this.setState({
       videoInPlayer : clickedVideo,
-      videoList : exampleVideoData.filter(video => video.id.videoId !== clickedVideo.id.videoId)
+      videoList : this.state.videoList.filter(video => video.id.videoId !== clickedVideo.id.videoId)
     });
+  }
+
+  componentDidMount() {
+    let init = {
+      key: YOUTUBE_API_KEY,
+      max: 5,
+      q: 'Warcraft 3 Remastered'
+    };
+
+    let cb = (function(data) {
+      this.setState({
+        videoInPlayer: data[0],
+        videoList: data.slice(1)
+      });
+    }.bind(this);
+    searchYouTube(init, cb);
   }
 
   render() {
