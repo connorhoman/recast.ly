@@ -11,10 +11,12 @@ class App extends React.Component {
     this.state = {
       videoInPlayer: exampleVideoData[0],
       videoList: exampleVideoData,
-      // input: ''
+      input: ''
     };
     this.handleClick = this.handleClick.bind(this);
-    this.searchClick = this.searchClick.bind(this);
+    // this.searchClick = this.searchClick.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+    this.inputChange = _.debounce(this.inputChange, 500);
   }
 
   handleClick(clickedVideo) {
@@ -23,33 +25,41 @@ class App extends React.Component {
     });
   }
 
-  searchClick() {
-    let text = document.getElementsByClassName('form-control')[0].value;
-  
-    let init = {
-      key: YOUTUBE_API_KEY,
-      max: 5,
-      query: text 
-    };
-    let cb = data => {
-      this.setState({
-        videoInPlayer: data[0],
-        videoList: data
-      });
-    };
+  inputChange(target) {
     
-    this.props.searchYouTube(init, cb);
-    document.getElementsByClassName('form-control')[0].value = '';
+    console.log(target.value);
+
+
+    this.setState({input: target.value});
+    this.getData();
   }
+
+  // searchClick() {
+  //   let text = document.getElementsByClassName('form-control')[0].value;
+  
+  //   let init = {
+  //     key: YOUTUBE_API_KEY,
+  //     max: 5,
+  //     query: text 
+  //   };
+  //   let cb = data => {
+  //     this.setState({
+  //       videoInPlayer: data[0],
+  //       videoList: data
+  //     });
+  //   };
+    
+  //   this.props.searchYouTube(init, cb);
+  //   document.getElementsByClassName('form-control')[0].value = '';
+  // }
 
   // getData() {
 
-  // }
-  componentDidMount() {
+  getData() {
     let init = {
       key: YOUTUBE_API_KEY,
       max: 5,
-      query: 'inception'
+      query: this.state.input || 'inception'
     };
 
     let cb = data => {
@@ -59,13 +69,17 @@ class App extends React.Component {
       });
     };
     this.props.searchYouTube(init, cb);
+  }
+
+  componentDidMount() {
+    this.getData();
   }
 
   render() {
     return (<div>
       <nav className="navbar">
         <div className="col-md-6 offset-md-3">
-          <Search search={this.searchClick}/>
+          <Search inputChange={this.inputChange}/>
         </div>
       </nav>
       <div className="row">
