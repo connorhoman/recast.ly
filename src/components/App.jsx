@@ -10,7 +10,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       videoInPlayer: exampleVideoData[0],
-      videoList: exampleVideoData
+      videoList: exampleVideoData,
+      // input: ''
     };
     this.handleClick = this.handleClick.bind(this);
     this.searchClick = this.searchClick.bind(this);
@@ -18,7 +19,7 @@ class App extends React.Component {
 
   handleClick(clickedVideo) {
     this.setState({
-      videoInPlayer : clickedVideo,
+      videoInPlayer: clickedVideo,
     });
   }
 
@@ -29,15 +30,15 @@ class App extends React.Component {
       key: YOUTUBE_API_KEY,
       max: 5,
       query: text 
-    }
+    };
     let cb = data => {
       this.setState({
         videoInPlayer: data[0],
         videoList: data
       });
-    }
-    console.log(this);
-    this.props.searchYouTube(init,cb);
+    };
+    
+    this.props.searchYouTube(init, cb);
     document.getElementsByClassName('form-control')[0].value = '';
   }
 
@@ -56,7 +57,7 @@ class App extends React.Component {
         videoInPlayer: data[0],
         videoList: data
       });
-    }
+    };
     this.props.searchYouTube(init, cb);
   }
 
